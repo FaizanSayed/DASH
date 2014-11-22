@@ -29,16 +29,44 @@ public class MainActivity extends Activity {
 
 				// TODO Auto-generated method stub
 				if (tb.isChecked()) {
+					//finish();
 					int time1 = Integer.parseInt(input1.getText().toString());
 					int time2 = Integer.parseInt(input2.getText().toString());
-					methodOff(time1);
-					methodOn(time2);
-					// int i = 1;
-					// while (i <= 3) {
-					// methodOff(2);
-					// methodOn(time2);
-					// i++;
-					// }
+					
+					int interval = time1*1000;
+					Handler handler = new Handler();
+					Runnable runnable = new Runnable() {
+						public void run() {
+							disableWifi();
+						}
+					};
+					
+					int interval1 = time2*1000;
+					Runnable runnable1 = new Runnable(){
+						public void run(){
+							enableWifi();
+						}
+					};
+					
+					handler.postAtTime(runnable, System.currentTimeMillis() + interval);
+					handler.postDelayed(runnable, interval);
+					
+					
+					int time3 = 5;
+					int interval2 = time3*1000;
+					
+					
+					int i = 1;
+					while(i <= 10){
+						
+						handler.postAtTime(runnable1, System.currentTimeMillis() + interval + i*interval1 + (i-1)*interval2);
+						handler.postDelayed(runnable1, interval + i*interval1 + (i-1)*interval2);
+						
+						handler.postAtTime(runnable, System.currentTimeMillis() + interval + i*interval1 + i*interval2);
+						handler.postDelayed(runnable, interval + i*interval1 + i*interval2);
+						
+						i++;
+					}
 				}
 				else{
 					conveyMessage();
@@ -54,46 +82,18 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
-	private void methodOn(final int time) {
-		final int interval = time * 1000; // 1 Second
-		Handler handler = new Handler();
-		Runnable runnable = new Runnable() {
-			public void run() {
-				enableWifi(time);
-			}
-		};
-		handler.postAtTime(runnable, System.currentTimeMillis() + interval);
-		handler.postDelayed(runnable, interval);
-	}
-
-	private void methodOff(final int time) {
-		final int interval = time * 1000; // 1 Second
-		Handler handler = new Handler();
-		Runnable runnable = new Runnable() {
-			public void run() {
-				disableWifi(time);
-			}
-		};
-		handler.postAtTime(runnable, System.currentTimeMillis() + interval);
-		handler.postDelayed(runnable, interval);
-	}
-
-
-	private void enableWifi(int time) {
+	private void enableWifi() {
 		WifiManager w = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		w.setWifiEnabled(true);
 
-		Toast.makeText(this, "Wifi Enabled " + Integer.toString(time),
-				Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Wifi Enabled ",Toast.LENGTH_SHORT).show();
 	}
 
-	private void disableWifi(int time) {
-		// wifi code
+	private void disableWifi() {
 		WifiManager w = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		w.setWifiEnabled(false);
 
-		Toast.makeText(this, "Wifi Disabled " + Integer.toString(time),
-				Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Wifi Disabled ",Toast.LENGTH_SHORT).show();
 	}
 	
 	private void conveyMessage(){
